@@ -1,8 +1,9 @@
+require 'securerandom'
 require 'koala'
 
 class UserController < ActionController::API
   def new_password
-    "#{Devise.friendly_token}1_Mm#{Devise.friendly_token}"
+     SecureRandom.urlsafe_base64(15).tr('lIO0', 'sxyz')
   end
 
   def fb_login
