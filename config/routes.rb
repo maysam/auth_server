@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'profile' => 'application#profile'
+  get 'users/profile' => 'application#profile'
 
   post 'user_token' => 'user_token#create'
   post 'sign_up' => 'user#sign_up'
