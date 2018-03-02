@@ -2,6 +2,13 @@ require 'securerandom'
 require 'koala'
 
 class UserController < ActionController::API
+  include Knock::Authenticable
+  before_action :authenticate_user, except: [:fb_login, :sign_up]
+
+  def profile
+    render json: {user: current_user}
+  end
+
   def new_password
      SecureRandom.urlsafe_base64(15).tr('lIO0', 'sxyz')
   end
@@ -66,13 +73,13 @@ class UserController < ActionController::API
   end
 
   def sign_up
-    permitted_params = params.permit(:email, :password)
+    permitted_params = params.require(:user).permit(:name, :email, :password, :password_confirmation)
     user = User.new(permitted_params)
     if user.save
       # If your User model has a `to_token_payload` method, you should use that here
-      render json: { jwt: user.token }, status: :created
+      render json: {user: user}, status: :created
     else
-      render json: { error: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages.map { |e| {detail: e} } }, status: :unprocessable_entity
     end
   end
 end

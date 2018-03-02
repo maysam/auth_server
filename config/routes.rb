@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  get 'users/profile' => 'application#profile'
+  get 'users/profile' => 'user#profile'
+  post 'users' => 'user#sign_up'
 
   post 'user_token' => 'user_token#create'
-  post 'sign_up' => 'user#sign_up'
   post 'fb_login' => 'user#fb_login'
 
   mount Knock::Engine => "/knock"
