@@ -6,4 +6,13 @@ class User < ApplicationRecord
   def token
     Knock::AuthToken.new(payload: { sub: id }).token
   end
+
+  def as_json(options)
+    options.merge({
+      id: id,
+      name: name,
+      email: email,
+      facebook_id: facebook_id,
+    })
+  end
 end

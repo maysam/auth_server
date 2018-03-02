@@ -3,6 +3,6 @@ class ApplicationController < ActionController::API
   before_action :authenticate_user
 
   def profile
-    render json: current_user
+    render json: {user: current_user}
   end
 end
