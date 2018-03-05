@@ -3,7 +3,7 @@ require 'koala'
 
 class UserController < ActionController::API
   include Knock::Authenticable
-  before_action :authenticate_user, except: [:fb_login, :sign_up]
+  before_action :authenticate_user, except: [:fb_login, :sign_up, :login_on_fb, :fb_return]
 
   def profile
     render json: {user: current_user}
@@ -11,6 +11,16 @@ class UserController < ActionController::API
 
   def new_password
      SecureRandom.urlsafe_base64(15).tr('lIO0', 'sxyz')
+  end
+
+  def login_on_fb
+    oauth = Koala::Facebook::OAuth.new nil, nil, fb_return_url
+    redirect_to oauth.url_for_oauth_code(permissions: 'email')
+  end
+
+  def fb_return
+    oauth = Koala::Facebook::OAuth.new nil, nil, fb_return_url
+    redirect_to oauth.url_for_access_token(params[:code])
   end
 
   def fb_login
